@@ -1,0 +1,28 @@
+services:
+  # Desarrollo: docker compose up --build dev
+  dev:
+    build:
+      context: .
+      target: dev
+    ports:
+      - '5173:5173'
+    volumes:
+      - .:/app
+      - /app/node_modules # evita pisar los node_modules del contenedor con los del host
+    environment:
+      - CHOKIDAR_USEPOLLING=true # hot reload fiable en Docker Desktop / WSL
+    env_file:
+      - path: .env
+        required: false
+
+  # Producción local: docker compose --profile prod up --build prod
+  prod:
+    profiles: ['prod']
+    build:
+      context: .
+      target: prod
+      args:
+        VITE_API_URL: ${VITE_API_URL:-}
+    ports:
+      - '${PROD_PORT:-8081}:80'
+    restart: unless-stopped
