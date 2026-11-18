@@ -58,10 +58,10 @@ PROD_PORT=9090 docker compose --profile prod up --build prod
 
 ### Dependencias nuevas
 
-`node_modules` vive dentro del contenedor, no en tu máquina. Tras añadir un paquete, reconstruye la imagen:
+`node_modules` vive dentro del contenedor en un volumen anónimo. Tras añadir un paquete, reconstruye la imagen y renueva ese volumen con `-V`; sin él, el contenedor sigue usando las dependencias antiguas:
 
 ```sh
-docker compose build dev
+docker compose up --build -V dev
 ```
 
 ### Estructura de Docker
